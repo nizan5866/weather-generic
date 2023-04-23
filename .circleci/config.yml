@@ -17,7 +17,7 @@ jobs:
       - run:
           name: test it!
           command: |
-            docker build -t website_tests -f tests/Docker tests
+            docker build -t website_tests -f tests/Dockerfile tests
             docker run --name test_website --net=host website_tests
 
 
