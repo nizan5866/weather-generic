@@ -5,7 +5,6 @@ jobs:
     steps:
       - checkout
       # Whatever you want to do
-      - run: sudo apt-get update
       - run: echo "this is a test!"
       - run:
           name: build & run image
