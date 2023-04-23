@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+    async function postData(data = {}) {
+        user_input = document.getElementById("user_input").value
+        if(!user_input){
+            alert("No value");
+            return;
+        }
+        if(/\d/.test(user_input)){
+            alert("Bad value. number in string")
+            return
+        }
+        document.getElementById("loader").style.visibility = "visible"
+        const userInput = {'location': user_input}
+        const response = await fetch("/get_data", {
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, *cors, same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            redirect: 'follow', // manual, *follow, error
+            referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+            body: JSON.stringify(userInput) // body data type must match "Content-Type" header
+        });
+        response.json().then((data) => generateTable(data))
+    }
+
+    function createTitles(titleList){
+        const titles = document.createElement("tr");
+        for(const titleName of titleList){
+            const title = document.createElement("th");
+            const titleText = document.createTextNode(titleName)
+            title.appendChild(titleText)
+            titles.appendChild(title)
+        }
+        return titles
+    }
+
+    var counter = 1;
+
+    function generateTable(jsonResponse) {
+        if(!jsonResponse["status"]){
+            console.log(jsonResponse)
+            alert(`Something went wrong\n${jsonResponse["message"]}`)
+            document.getElementById("loader").style.visibility = "hidden"
+            return
+        }
+        //console.log(jsonResponse)
+        const superDiv = document.createElement("div")
+        const locationTitle = document.createElement("h4")
+        const locationText = document.createTextNode(jsonResponse["fullLocation"])
+        locationTitle.appendChild(locationText)
+        superDiv.appendChild(locationTitle)
+        const tblBody = document.createElement("tbody");
+        const tbl = document.createElement("table");
+        const tblhead = document.createElement("thead");
+        const title_list = [
+            "Date",
+            "Day of the week",
+            "Day average degrees",
+            "Night average degrees",
+            "Humidity"
+        ];
+        tbl.appendChild(createTitles(title_list))
+        weatherData = jsonResponse["relData"]
+        for (const property in weatherData){
+            let cells_counter = 0
+            const row = document.createElement("tr");
+            const cell = document.createElement("td");
+            const cellText = document.createTextNode(`${property}`);
+            cell.appendChild(cellText);
+            row.appendChild(cell);
+            cells_counter++
+            for (const inProperty in weatherData[property]){
+                cells_counter++
+                extra_str = (cells_counter == 3 || cells_counter == 4) ? "°" : cells_counter == 5 ? "%" : ""
+                const cell = document.createElement("td");
+                const cellText = document.createTextNode(`${weatherData[property][inProperty]}${extra_str}`);
+                cell.appendChild(cellText);
+                cell.setAttribute("style","text-align:center")
+                row.appendChild(cell);
+            }
+            tblBody.appendChild(row);
+        }
+        tbl.appendChild(tblBody);
+        tbl.setAttribute("border", "1");
+        superDiv.appendChild(tbl)
+        superDiv.setAttribute("id", `specialDiv${counter}`);
+        superDiv.appendChild(createDeleteButton())
+        counter++;
+        document.getElementById("loader").style.visibility = "hidden"
+        document.body.appendChild(superDiv);
+    }
+
+    function createDeleteButton(){
+        const deleteButton = document.createElement("button");
+        deleteButton.setAttribute("id",`deleteButton${counter}`);
+        const buttonText = document.createTextNode(`delete the above`);
+        deleteButton.setAttribute("onClick",`document.getElementById("specialDiv${counter}").remove()`);
+        deleteButton.setAttribute("style",`width: 280px`);
+        deleteButton.setAttribute("style",`margin: 10px`);
+        deleteButton.appendChild(buttonText);
+        return deleteButton
+    }
+    </script>
+</head>
+
+<body>
+
+    <h2>Get weather forcast for the next 7 days, by location</h2>
+    <input id="user_input" placeholder="city/state">
+    <button id="best_button" onclick="postData()">submit</button>
+    <h6 id="loader" style="visibility: hidden">Loading....</h6>
+
+</body>
+
+<div id="data_div"></div>
+
+
+</html>
