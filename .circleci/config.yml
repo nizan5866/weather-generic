@@ -7,3 +7,15 @@ jobs:
       # Whatever you want to do
       - run: sudo apt-get update
       - run: echo "this is a test!"
+      - run:
+          name: build & run image
+          command: |
+            docker build -t gitlab.nitsan-dg.com:5050/weather-generic/weather -f website/Dockerfile website
+            docker run -d -p 5000:5000 --name target_container gitlab.nitsan-dg.com:5050/weather-generic/weather
+      - run:
+          name: test it!
+          command: |
+            docker build -t website_tests -f tests/Docker file tests
+            docker run --name test_website --net=host website_tests
+
+
