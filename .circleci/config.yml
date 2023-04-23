@@ -22,24 +22,19 @@ jobs:
       - run:
           name: upload it!
           command: |
-            export content10="{\"content\":\"${CIRCLE_BUILD_NUM}\"}"
-            echo $content10
-            echo $discord_webhook
             docker login gitlab.nitsan-dg.com:5050 -u $docker_user -p $docker_pass
             docker push gitlab.nitsan-dg.com:5050/weather-generic/weather:${CIRCLE_BUILD_NUM}
       - run:
           name: update discord!!
           when: on_success
           command: |
-            export content10="{\"content\":\"circleCI pipline weather build number ${CIRCLE_BUILD_NUM} SUCCEEDED\"}"
-            echo $content10
-            echo $discord_webhook
+            export content10="{\"content\":\"circleCI_pipeline_weather_build_number_${CIRCLE_BUILD_NUM}_SUCCEEDED\"}"
             curl -X POST ${discord_webhook} -H "Content-Type: application/json" -d $(echo $content10)
       - run:
           name: update discord!!
           when: on_fail
           command: |
-            export content10="{\"content\":\"circleCI pipline weather build number ${CIRCLE_BUILD_NUM} FAILED\"}"
+            export content10="{\"content\":\"circleCI_pipeline_weather_build_number_${CIRCLE_BUILD_NUM}_FAILED\"}"
             curl -X POST ${discord_webhook} -H "Content-Type: application/json" -d $(echo $content10)
 
 
