@@ -22,6 +22,7 @@ jobs:
       - run:
           name: upload it!
           command: |
+            export CIRCLE_BUILD_NUM=${CIRCLE_BUILD_NUM}
             docker login gitlab.nitsan-dg.com:5050 -u $docker_user -p $docker_pass
             docker push gitlab.nitsan-dg.com:5050/weather-generic/weather:${CIRCLE_BUILD_NUM}
       - run:
