@@ -11,3 +11,4 @@ RUN pip install --no-cache-dir --upgrade --user -r requirements.txt
 COPY --chown=newuser:newuser . .
 EXPOSE 5000
 CMD ["gunicorn","-w","3","-b","0.0.0.0:5000","wsgi:app"]
+
