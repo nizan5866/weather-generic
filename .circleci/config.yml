@@ -1,10 +1,13 @@
 jobs:
   build:
     docker:
-      - image: docker
+      - image: cimg/base:2023.04
     steps:
       - checkout
+      - setup_remote_docker
+
       # Whatever you want to do
+      - run: sudo apt-get update
       - run: echo "this is a test!"
       - run:
           name: build & run image
