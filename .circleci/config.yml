@@ -13,7 +13,7 @@ jobs:
           name: build & run image
           command: |
             docker build -t gitlab.nitsan-dg.com:5050/weather-generic/weather:${CIRCLE_BUILD_NUM} -f website/Dockerfile website
-            docker run -d -p 5000:5000 -e WEATHER_KEY=$WEATHER_KEY --name target_container gitlab.nitsan-dg.com:5050/weather-generic/weather
+            docker run -d -p 5000:5000 -e WEATHER_KEY=$WEATHER_KEY --name target_container gitlab.nitsan-dg.com:5050/weather-generic/weather:${CIRCLE_BUILD_NUM}
       - run:
           name: test it!
           command: |
