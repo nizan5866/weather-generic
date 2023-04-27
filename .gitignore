@@ -3,3 +3,4 @@ __pycache__
 Jenkinsfile
 .pytest_cache
 script.sh
+terraform_eks
