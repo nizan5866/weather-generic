@@ -1,4 +1,5 @@
 #syntax=docker/dockerfile:1
+#unimportant note
 FROM python:3.10.10-alpine3.17
 
 RUN pip install --upgrade pip
