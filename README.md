@@ -1,4 +1,3 @@
 hello
 goodbye
 yes
-bye
